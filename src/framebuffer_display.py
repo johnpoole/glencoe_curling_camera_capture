@@ -8,8 +8,6 @@ CHECK_INTERVAL_SEC = 0.5
 
 def main() -> None:
     # Use framebuffer console, not X
-    os.putenv("SDL_VIDEODRIVER", "fbcon")
-    os.putenv("SDL_FBDEV", "/dev/fb0")
     os.putenv("SDL_NOMOUSE", "1")
 
     pygame.display.init()
@@ -59,4 +57,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
