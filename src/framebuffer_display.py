@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import time
+import datetime
 import pygame
 
 IMAGE_PATH = os.path.join(
@@ -12,18 +13,22 @@ CHECK_INTERVAL_SEC = 0.5
 
 
 def main() -> None:
-    # Do not force SDL_VIDEODRIVER; let SDL pick (KMSDRM on Pi OS Lite).
+    # Let SDL choose the video driver (KMSDRM on Pi OS Lite).
     os.putenv("SDL_NOMOUSE", "1")
 
     pygame.display.init()
+    pygame.font.init()
+
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     pygame.mouse.set_visible(False)
 
     screen_rect = screen.get_rect()
+    font = pygame.font.Font(None, 36)
+
     last_mtime = None
 
     while True:
-        # Drain events to keep SDL happy.
+        # Drain events so SDL stays happy.
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -56,6 +61,14 @@ def main() -> None:
 
             screen.fill(0)
             screen.blit(img, img_rect)
+
+            # Draw a changing timestamp so you can see that redraws occur
+            ts = datetime.datetime.now().strftime("%H:%M:%S")
+            text_surf = font.render(ts, True, (255, 255, 255))
+            text_rect = text_surf.get_rect()
+            text_rect.bottomright = (screen_rect.right - 10, screen_rect.bottom - 10)
+            screen.blit(text_surf, text_rect)
+
             pygame.display.flip()
 
         time.sleep(CHECK_INTERVAL_SEC)
