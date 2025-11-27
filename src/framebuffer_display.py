@@ -37,7 +37,7 @@ def main() -> None:
                 time.sleep(CHECK_INTERVAL_SEC)
                 continue
 
-            img_rect = img.get_rect()
+             img_rect = img.get_rect()
             scale = min(
                 screen_rect.width / img_rect.width,
                 screen_rect.height / img_rect.height,
@@ -51,6 +51,20 @@ def main() -> None:
 
             screen.fill(0)
             screen.blit(img, img_rect)
+
+            # Overlay a changing timestamp so you can see that redraws are happening
+            try:
+                pygame.font.init()
+                font = pygame.font.Font(None, 36)
+                import datetime
+                ts = datetime.datetime.now().strftime("%H:%M:%S")
+                text_surf = font.render(ts, True, (255, 255, 255))
+                text_rect = text_surf.get_rect()
+                text_rect.bottomright = (screen_rect.right - 10, screen_rect.bottom - 10)
+                screen.blit(text_surf, text_rect)
+            except Exception:
+                pass
+
             pygame.display.flip()
 
         time.sleep(CHECK_INTERVAL_SEC)
