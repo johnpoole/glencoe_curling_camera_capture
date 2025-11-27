@@ -1,0 +1,16 @@
+[Unit]
+Description=Glencoe Curling HDMI Framebuffer Display
+After=multi-user.target camera_server.service
+Wants=camera_server.service
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/glencoe_curling_camera_capture
+ExecStart=/usr/bin/python3 -u src/framebuffer_display.py
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
