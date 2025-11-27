@@ -3,11 +3,16 @@ import os
 import time
 import pygame
 
-IMAGE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "images", "hdmi.jpg")
+IMAGE_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)),
+    "images",
+    "hdmi.jpg",
+)
 CHECK_INTERVAL_SEC = 0.5
 
+
 def main() -> None:
-    # Use framebuffer console, not X
+    # Do not force SDL_VIDEODRIVER; let SDL pick (KMSDRM on Pi OS Lite).
     os.putenv("SDL_NOMOUSE", "1")
 
     pygame.display.init()
@@ -18,7 +23,7 @@ def main() -> None:
     last_mtime = None
 
     while True:
-        # Drain events to avoid SDL complaining
+        # Drain events to keep SDL happy.
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -51,23 +56,10 @@ def main() -> None:
 
             screen.fill(0)
             screen.blit(img, img_rect)
-
-            # Overlay a changing timestamp so you can see that redraws are happening
-            try:
-                pygame.font.init()
-                font = pygame.font.Font(None, 36)
-                import datetime
-                ts = datetime.datetime.now().strftime("%H:%M:%S")
-                text_surf = font.render(ts, True, (255, 255, 255))
-                text_rect = text_surf.get_rect()
-                text_rect.bottomright = (screen_rect.right - 10, screen_rect.bottom - 10)
-                screen.blit(text_surf, text_rect)
-            except Exception:
-                pass
-
             pygame.display.flip()
 
         time.sleep(CHECK_INTERVAL_SEC)
+
 
 if __name__ == "__main__":
     main()
