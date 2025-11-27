@@ -90,30 +90,21 @@ def compute_last_modified(path):
     dt = datetime.utcfromtimestamp(st.st_mtime)
     return dt.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-def capture_loop():
+def capture_loop() -> None:
     ensure_image_dir()
     while not stop_event.is_set():
         ok = capture_frame_to_temp()
         if ok:
-            if os.path.exists(LAST_IMAGE):
-                try:
-                    diff = images_mean_abs_diff(TEMP_IMAGE, LAST_IMAGE)
-                except:
-                    diff = 999.0
-            else:
-                diff = 999.0
-
-            if diff >= DIFF_THRESHOLD:
-                try:
-                    copy_image_atomic(TEMP_IMAGE, LAST_IMAGE)
-                    copy_image_atomic(TEMP_IMAGE, HDMI_IMAGE)
-                except:
-                    pass
+            try:
+                copy_image_atomic(TEMP_IMAGE, LAST_IMAGE)
+                copy_image_atomic(TEMP_IMAGE, HDMI_IMAGE)
+            except Exception:
+                pass
 
         try:
             if os.path.exists(TEMP_IMAGE):
                 os.remove(TEMP_IMAGE)
-        except:
+        except Exception:
             pass
 
         time.sleep(CAPTURE_INTERVAL_SEC)
