@@ -1,0 +1,16 @@
+[Unit]
+Description=Glencoe Curling HDMI Display (feh reloader)
+After=graphical.target camera_server.service
+Wants=camera_server.service
+
+[Service]
+User=pi
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi/.Xauthority
+WorkingDirectory=/home/pi/glencoe_curling_camera_capture
+ExecStart=/usr/bin/feh --fullscreen --auto-zoom --reload 1 images/hdmi.jpg
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

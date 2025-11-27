@@ -1,0 +1,16 @@
+[Unit]
+Description=Glencoe Curling Camera Capture + HTTP Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/glencoe_curling_camera_capture
+ExecStart=/usr/bin/python3 -u src/camera_server.py
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
