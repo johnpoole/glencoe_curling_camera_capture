@@ -37,7 +37,7 @@ def main() -> None:
                 time.sleep(CHECK_INTERVAL_SEC)
                 continue
 
-             img_rect = img.get_rect()
+            img_rect = img.get_rect()
             scale = min(
                 screen_rect.width / img_rect.width,
                 screen_rect.height / img_rect.height,
